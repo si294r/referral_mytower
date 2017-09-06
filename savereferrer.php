@@ -29,10 +29,9 @@ $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // create record if not exists
 $sql1 = "INSERT INTO referral (swrve_user_id)
-SELECT :user_id1 WHERE NOT EXISTS (
-    SELECT 1 FROM referral 
-    WHERE swrve_user_id = :user_id2
-  )";
+    SELECT * FROM (SELECT :user_id1) t WHERE NOT EXISTS (
+        SELECT 1 FROM referral WHERE swrve_user_id = :user_id2
+    )";
 $statement1 = $connection->prepare($sql1);
 $statement1->bindParam(":user_id1", $data['swrve_user_id']);
 $statement1->bindParam(":user_id2", $data['swrve_user_id']);

@@ -16,17 +16,17 @@ $array = apcu_fetch($key);
 
 if ($array === FALSE) {
     
-    include("/var/www/redshift-config2.php");
+    include("/var/www/mysql-config2.php");
     $connection = new PDO(
-        "pgsql:dbname=$rdatabase;host=$rhost;port=$rport",
-        $ruser, $rpass, array(PDO::ATTR_PERSISTENT => true)
+        "mysql:dbname=mytower;host=$myhost;port=$myport",
+        $myuser, $mypass, array(PDO::ATTR_PERSISTENT => true)
     );
-
+    $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // create shorten_id if not exists
-    $sql1 = "INSERT INTO referral_mytower_ios (swrve_user_id)
+    $sql1 = "INSERT INTO referral (swrve_user_id)
     SELECT :user_id1 WHERE NOT EXISTS (
-        SELECT 1 FROM referral_mytower_ios 
+        SELECT 1 FROM referral 
         WHERE swrve_user_id = :user_id2
       )";
     $statement1 = $connection->prepare($sql1);
@@ -35,7 +35,7 @@ if ($array === FALSE) {
     $statement1->execute();
 
     // get shorten_id
-    $sql2 = "SELECT shorten_id, swrve_user_id FROM referral_mytower_ios WHERE swrve_user_id = :user_id";
+    $sql2 = "SELECT shorten_id, swrve_user_id FROM referral WHERE swrve_user_id = :user_id";
     $statement2 = $connection->prepare($sql2);
     $statement2->execute(array(':user_id' => $swrve_user_id));
     $row = $statement2->fetch(PDO::FETCH_ASSOC);

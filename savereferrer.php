@@ -20,16 +20,17 @@ if (trim($data['referrer']) == "") {
     );
 }
 
-include("/var/www/redshift-config2.php");
+include("/var/www/mysql-config2.php");
 $connection = new PDO(
-    "pgsql:dbname=$rdatabase;host=$rhost;port=$rport",
-    $ruser, $rpass, array(PDO::ATTR_PERSISTENT => true)
+    "mysql:dbname=mytower;host=$myhost;port=$myport",
+    $myuser, $mypass, array(PDO::ATTR_PERSISTENT => true)
 );
+$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // create record if not exists
-$sql1 = "INSERT INTO referral_mytower_ios (swrve_user_id)
+$sql1 = "INSERT INTO referral (swrve_user_id)
 SELECT :user_id1 WHERE NOT EXISTS (
-    SELECT 1 FROM referral_mytower_ios 
+    SELECT 1 FROM referral 
     WHERE swrve_user_id = :user_id2
   )";
 $statement1 = $connection->prepare($sql1);
@@ -38,7 +39,7 @@ $statement1->bindParam(":user_id2", $data['swrve_user_id']);
 $statement1->execute();
 
 // save referrer
-$sql2 = "UPDATE referral_mytower_ios "
+$sql2 = "UPDATE referral "
         . "SET referrer = :referrer "
         . "WHERE swrve_user_id = :user_id and coalesce(referrer, '') <> :referrer1 ";
 $statement2 = $connection->prepare($sql2);

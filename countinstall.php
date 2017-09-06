@@ -21,14 +21,15 @@ if (is_numeric($count_install)) {
     );
 }
 
-include("/var/www/redshift-config2.php");
+include("/var/www/mysql-config2.php");
 $connection = new PDO(
-    "pgsql:dbname=$rdatabase;host=$rhost;port=$rport",
-    $ruser, $rpass, array(PDO::ATTR_PERSISTENT => true)
+    "mysql:dbname=mytower;host=$myhost;port=$myport",
+    $myuser, $mypass, array(PDO::ATTR_PERSISTENT => true)
 );
+$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // get count install
-$sql2 = "SELECT count(*) as count_install FROM referral_mytower_ios WHERE referrer = :user_id";
+$sql2 = "SELECT count(*) as count_install FROM referral WHERE referrer = :user_id";
 $statement2 = $connection->prepare($sql2);
 $statement2->execute(array(':user_id' => $swrve_user_id));
 $row = $statement2->fetch(PDO::FETCH_ASSOC);

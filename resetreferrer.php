@@ -11,14 +11,15 @@ if (trim($swrve_user_id) == "") {
     );
 }
 
-include("/var/www/redshift-config2.php");
+include("/var/www/mysql-config2.php");
 $connection = new PDO(
-    "pgsql:dbname=$rdatabase;host=$rhost;port=$rport",
-    $ruser, $rpass, array(PDO::ATTR_PERSISTENT => true)
+    "mysql:dbname=mytower;host=$myhost;port=$myport",
+    $myuser, $mypass, array(PDO::ATTR_PERSISTENT => true)
 );
+$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // reset referrer
-$sql2 = "UPDATE referral_mytower_ios "
+$sql2 = "UPDATE referral "
         . "SET referrer = '' "
         . "WHERE referrer = :referrer ";
 $statement2 = $connection->prepare($sql2);

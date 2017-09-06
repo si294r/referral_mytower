@@ -19,7 +19,7 @@ if ($array === FALSE) {
     include("/var/www/mysql-config2.php");
     $connection = new PDO(
         "mysql:dbname=mytower;host=$myhost;port=$myport",
-        $myuser, $mypass, array(PDO::ATTR_PERSISTENT => true)
+        $myuser, $mypass
     );
     $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
